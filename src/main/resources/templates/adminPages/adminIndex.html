@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'欢迎您，管理员'+${#httpSession.getAttribute('name')}"></title>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/layui/2.5.7/css/layui.min.css">
+    <link th:href="@{/css/adminPages.css}" rel="stylesheet">
+
+    <style>
+
+        .container {
+            width: 75%;
+            top: 100px;
+            height: 400px;
+            position: absolute;
+            left: 245px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .container_box_row {
+            padding: 26px;
+            font-size: 20px;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<!--    <div th:insert="~{common/common::navbar}"></div>-->
+
+    <div class="sidebar">
+
+        <div class="option_box" style="background-color: #4CAF50;">
+            <a class="option_box_text" th:href="@{/toadminpage}">
+                首页
+            </a>
+        </div>
+
+        <div class="option_box">
+            <a class="option_box_text" th:href="@{/toViewLockedEssay}">
+                已锁定文章
+            </a>
+        </div>
+
+        <div class="option_box">
+            <a class="option_box_text" th:href="@{/toViewCheckingEssay}">
+                待审核文章
+            </a>
+        </div>
+
+        <div class="option_box">
+            <a class="option_box_text" th:href="@{/toViewBannedUser}">
+                已禁言用户
+            </a>
+        </div>
+
+        <div class="option_box" style="bottom: -301px;position: relative;background-color: #ed1010;">
+            <a class="option_box_text" th:href="@{/index}">
+                回到主站
+            </a>
+        </div>
+
+    </div>
+
+    <div class="container">
+
+        <div class="container_box_row">
+            <span>系统中已经有了</span>
+            <span style="color: red" th:text="${allUserCnt}"></span>
+            <span>位用户！</span>
+        </div>
+
+        <div class="container_box_row">
+            <span>系统中已经发布了</span>
+            <span style="color: red" th:text="${allEssayCnt}"></span>
+            <span>篇攻略文章！</span>
+        </div>
+
+        <div class="container_box_row">
+            <span>系统中有</span>
+            <span th:text="${lockedEssayNum}"></span>
+            <span>篇攻略文章被锁定。去</span>
+            <a th:href="@{/toViewLockedEssay}">查看</a>
+        </div>
+
+        <div class="container_box_row">
+            <span>系统中有</span>
+            <span th:text="${unCheckEssayNum}"></span>
+            <span>篇攻略文章待审核。去</span>
+            <a th:href="@{/toViewCheckingEssay}">审核</a>
+        </div>
+
+        <div class="container_box_row">
+            <span>系统中有</span>
+            <span th:text="${bannedUserNum}"></span>
+            <span>位用户被禁言。去</span>
+            <a th:href="@{/toViewBannedUser}">查看</a>
+        </div>
+    </div>
+
+</body>
+</html>

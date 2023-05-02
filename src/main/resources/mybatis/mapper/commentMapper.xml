@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lanyo.foodintroductionsystem.mapper.CommentMapper">
+
+    <insert id="addComment" parameterType="comment">
+        insert into comment(comment_article_id , comment_user_id , comment_user_name , comment_text , comment_pub_time)
+        values (#{comment_article_id} , #{comment_user_id} , #{comment_user_name} , #{comment_text} , #{comment_pub_time})
+    </insert>
+
+    <delete id="deleteComment" parameterType="int">
+        delete from comment where comment_id = #{comment_id}
+    </delete>
+
+    <!-- Only update comment_text -->
+    <update id="updateComment" parameterType="comment">
+        update comment
+        set comment_text = #{comment_text} , comment_pub_time = #{comment_pub_time}
+        where comment_id = #{comment_id}
+    </update>
+
+    <select id="selectComment" parameterType="int" resultType="comment">
+        select * from comment where comment_id = #{comment_id}
+    </select>
+
+    <!-- very likely won't be used -->
+    <select id="selectAllComments" resultType="comment">
+        select * from comment
+    </select>
+
+    <select id="queryCommentsByEssay" parameterType="int" resultType="comment">
+        select * from comment
+        where comment_article_id = #{comment_article_id}
+    </select>
+
+</mapper>

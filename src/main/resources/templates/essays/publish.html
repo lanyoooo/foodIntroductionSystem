@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>发布</title>
+    <link th:href="@{/css/common.css}" rel="stylesheet">
+    <link th:href="@{/css/essays/publish.css}" rel="stylesheet">
+</head>
+<body>
+
+<!--    <div th:insert="~{/common/common::navbar}"></div>-->
+
+    <div class="container">
+        <h1>发表攻略</h1>
+        <form th:action="@{/publishEssay}">
+            <label for="title">标题:</label>
+            <input type="text" id="title" name="title" required="" placeholder="请输入标题" />
+            <label for="content">正文:</label>
+            <textarea id="content" name="content" required="" placeholder="请输入内容"></textarea>
+
+<!--            <div class="upload">-->
+<!--                <input type="file" id="file" name="file" multiple/>-->
+<!--                <label for="file">上传图片</label>-->
+<!--            </div>-->
+
+<!--            <div id="image-container"></div>-->
+
+            <button type="submit">发布</button>
+        </form>
+    </div>
+
+    <script>
+        // 实现图片预览功能
+        const fileInput = document.getElementById("file");
+        const previewDiv = document.querySelector(".image-preview");
+
+        fileInput.addEventListener("change", function() {
+            previewDiv.innerHTML = ""; // 清空之前预览的图片
+            const files = this.files;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function() {
+                    const img = document.createElement("img");
+                    img.src = reader.result;
+                    previewDiv.appendChild(img);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

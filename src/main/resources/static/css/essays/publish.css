@@ -1,0 +1,97 @@
+/*居中布局*/
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0; /*去除body的默认margin*/      /**/
+}
+
+/*输入框样式*/
+input,
+textarea {
+    display: block;
+    margin-bottom: 20px;
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+textarea {
+    height: 200px; /*设定正文输入框高度*/
+}
+
+/*上传图片样式*/
+.upload {
+    margin-bottom: 20px;
+}
+
+.upload input[type="file"] {
+    display: none;
+}
+
+.upload label {
+    /*display: block;*/
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.upload label:hover {
+    background-color: #f2f2f2;
+}
+
+/*容器样式*/
+.container {
+    width: 600px;
+    max-width: 600px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/*提交按钮样式*/
+button {
+    /*display: block;*/
+    position: relative;
+    left: 35%;
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/*添加图片样式*/
+.image {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.image img {
+    margin-right: 10px;
+    width: 100px;
+    height: 100px;
+}
+
+.image button {
+    background-color: #f44336;
+    margin-left: 10px;
+}
+
+.image button:hover {
+    background-color: #d32f2f;
+}

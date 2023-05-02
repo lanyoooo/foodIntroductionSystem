@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${user.user_name}+'的个人资料'"></title>
+</head>
+
+<style>
+    .banUserBox {
+        position: relative;
+        width: 20%;
+        top: 200px;
+        left: 40%;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        border-radius: 5px;
+    }
+
+    a {
+        display: block;
+        margin: 10px;
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        width: 20%;
+        position: relative;
+        left: 30%;
+        text-decoration: none;
+    }
+</style>
+
+<body>
+
+    <div class="banUserBox">
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <span style="margin: 10px;padding: 10px;display: block;"
+                              th:text="'用户名：'+${user.user_name}"></span>
+                        <div th:if="${#httpSession.getAttribute('authority') == 'root'}">
+                            <a style="display: block;margin: 10px;"
+                               th:if="${user.user_isBanned} == true"
+                               th:href="@{/unBanUser/{eid}/{uid}(eid=${oriEssayId} , uid=${user.user_id})}">
+                                解除禁言
+                            </a>
+                            <a style="display: block;margin: 10px;"
+                               th:if="${user.user_isBanned} == false"
+                               th:href="@{/banUser/{eid}/{uid}(eid=${oriEssayId} , uid=${user.user_id})}">
+                                禁言
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a style="" th:href="@{/essays/}+${oriEssayId}">返回</a>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${essay.essay_title}"></title>
+<!--    <link rel="stylesheet" href="https://cdn.staticfile.org/layui/2.6.8/css/layui.min.css" />-->
+<!--    <script src="https://cdn.staticfile.org/layui/2.6.8/layui.min.js"></script>-->
+<!--    <script src="path/to/comment-list-box.js"></script>-->
+
+<!--    <link th:href="@{https://layui.vercel.app/layui-v2.6.8/layui/css/layui.css}" rel="stylesheet">-->
+    <link th:href="@{/css/common.css}" rel="stylesheet">
+    <style>
+        /* 设置整个页面的字体和背景色 */
+        .article {
+            width: 800px;
+            position: absolute;
+            display: block;
+            padding: 10px;
+            /*align-content: center;*/
+            top: 80px;
+            left: 275px;
+            background-color: #fff;
+            z-index: -1;
+        }
+
+        .viewArea {
+            padding: 10px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+        }
+
+        /* 设置文章标题样式 */
+        h1 {
+            font-size: 24px;
+            margin: 0;
+            padding: 10px 0;
+        }
+
+        /* 设置作者、发布时间样式 */
+        .meta {
+            font-size: 14px;
+            color: #999;
+        }
+
+        /* 设置正文样式 */
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* 设置评论区样式 */
+        #comments {
+            margin-top: 0;
+            padding: 10px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* 设置点赞样式 */
+        #like_btn {
+            width: 80px;
+            height: 40px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 13px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            left: 4px;
+        }
+
+        #like_btn:hover{
+            background-color: #45a049;
+        }
+
+        table {
+            border-collapse: separate; /* 设置边框独立 */
+            border-spacing: 10px; /* 设置单元格之间的间距 */
+        }
+
+        textarea {
+            width: 98%;
+            height: 75px;
+            left: 0.5%;
+            position: relative;
+        }
+
+        .comment_each {
+            padding: 5px;
+        }
+
+        .like_button {
+            position: absolute;
+            display: contents;
+            top: 0;
+            left: 250px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .like_pic {
+            position: relative;
+            top: -15px;
+            left: 365px;
+            width: 50px;
+            height: 50px;
+        }
+
+        .like_pic img {
+            width: 46px;
+            height: 49px;
+        }
+
+        #delete_comment_btn {
+            background-color: #ff2b2b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 12px;
+            padding: 5px;
+        }
+
+    </style>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!--    <script th:src="@{https://layui.vercel.app/layui-v2.6.8/layui/layui.js}"></script>-->
+
+</head>
+<body>
+
+    <div th:insert="~{common/common::navbar}"></div>
+    <div th:insert="~{common/common::publish-btn}"></div>
+
+    <div class="article">
+        <div class="viewArea">
+            <div>
+                <h1 th:text="${essay.essay_title}"></h1>
+                <div th:if="${#httpSession.getAttribute('authority')} == 'root'">
+                    <a th:if="${essay.essay_isLocked} == false"
+                       th:href="@{/lockEssay/} + ${essay.essay_id}">
+                        锁定文章
+                    </a>
+                    <a th:if="${essay.essay_isLocked} == true"
+                       th:href="@{/unlockEssay/} + ${essay.essay_id}">
+                        解除锁定
+                    </a>
+                </div>
+            </div>
+
+            <div class="meta">
+                <span th:text="'作者：' + ${author}"></span>   <!-- 可以直接用session中的name，不用非得用model的ahthor -->
+                &nbsp&nbsp
+                <span th:text="'发布时间:' + ${#dates.format(essay.essay_pub_time,'yyyy-MM-dd HH:mm:ss')}"></span>
+                &nbsp&nbsp
+                <span th:text="'浏览量:' + ${essay.essay_view_cnt}"></span>
+                &nbsp&nbsp
+                <span th:text="'点赞量:' + ${essay.essay_like_cnt}"></span>
+            </div>
+            <p th:text="${essay.essay_text}"></p>
+        </div>
+
+        <div class="like_button" th:switch="${isLiked}">
+            <div class="like_pic" th:case="true">
+                <a th:href="@{/cancelLike/{essayId}/{userId}(essayId=${essay.essay_id}, userId=${#httpSession?.getAttribute('uid')})}">
+                    <img src="/img/liked.png">
+                </a>
+                <span style="font-size: 13px" th:text="${essay.essay_like_cnt}+'人赞了'"></span>
+            </div>
+            <div class="like_pic" th:case="false" >
+                <a th:href="@{/applyLike/{essayId}/{userId}(essayId=${essay.essay_id} , userId=${#httpSession?.getAttribute('uid')})}">
+                    <img src="/img/nolike.png">
+                </a>
+                <span style="font-size: 13px" th:text="${essay.essay_like_cnt}+'人赞了'"></span>
+            </div>
+        </div>
+<!--        <button class="like_btn" th:text="${essay.essay_like_cnt} + '赞'" th:attr="data-liked=${liked}"></button>-->
+
+        <div id="comments">
+            <div id="pub_comment_div">
+                <form th:action="@{/publishComment}">
+                    <textarea id="pub_comment" name="pub_comment" placeholder="请输入评论..." required=""></textarea>
+                    <input type="hidden" name="pub_comment_essayId" th:value="${essay.essay_id}">
+                    <input type="hidden" name="pub_publisher_id" th:value="${#httpSession?.getAttribute('uid')}">
+                    <input type="hidden" name="pub_publisher_name" th:value="${#httpSession?.getAttribute('name')}">
+                    <button id="like_btn" type="submit">提交评论</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 展示评论 -->
+        <div id="comments">
+            <h2 style="margin: 10px;padding: 0;">评论列表</h2>
+            <table>
+                <tbody>
+                    <tr th:each="comment : ${comments}">
+                        <td>
+                            <div class="comment_each">
+                                <span style="margin: 0;padding: 0;font-weight: 700;font-size: 19px;"
+                                      th:text="${comment.comment_user_name}"
+                                      th:if="${#httpSession.getAttribute('authority') != 'root'}">
+                                </span>
+                                <a style="margin: 0;padding: 0;font-weight: 700;font-size: 19px;color: black;text-decoration: none;"
+                                   th:text="${comment.comment_user_name}"
+                                   th:href="@{/toUserPerPage/{eid}/{uid}(eid=${essay.essay_id},uid=${comment.comment_user_id})}"
+                                   th:if="${#httpSession.getAttribute('authority') == 'root'}">
+                                </a>
+                                &nbsp
+                                <span style="margin: 0;padding: 0;font-size: 12px;" th:text="'发表于'+${#dates.format(comment.comment_pub_time, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                                <a id="delete_comment_btn" th:if="${#httpSession.getAttribute('authority') == 'root' || #httpSession.getAttribute('uid') == comment.comment_user_id}"
+                                   th:href="@{/deleteComment/{eid}/{cid}(eid=${essay.essay_id} , cid=${comment.comment_id})}">
+                                    删除评论
+                                </a>
+                            </div>
+                            <div class="comment_each">
+                                <p style="margin: 0;padding: 0;" th:text="${comment.comment_text}"></p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div>
+        <!-- 发表评论 -->
+<!--        <div>-->
+<!--            <span th:text="${essay.essay_like_cnt} + '赞'"></span>-->
+<!--            <button class="like_btn" th:attr="liked = false" onclick="toggleLike(this)">点赞</button>-->
+<!--        </div>-->
+
+<!--        <div class="layui-row" id="combox">-->
+<!--            <div class="layui-col-md6 layui-col-md-offset3 com" >-->
+<!--                <h2>发表评论</h2>-->
+
+<!--                <form class="layui-form layui-form-pane" th:action="@{/publishComment}">-->
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label" th:text="${#httpSession?.getAttribute('name')}"></label>-->
+<!--                        &lt;!&ndash;                        <div class="layui-input-inline">&ndash;&gt;-->
+<!--                        &lt;!&ndash;                            <input type="text" id="username" name="username" required  lay-verify="required"&ndash;&gt;-->
+<!--                        &lt;!&ndash;                                   placeholder="" autocomplete="off" class="layui-input">&ndash;&gt;-->
+<!--                        &lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--                    </div>-->
+<!--                    <div class="layui-form-item">-->
+<!--                        <div class="layui-form-item">-->
+<!--                            <div class="layui-input-inline">-->
+<!--                        <textarea id="content" name="content" placeholder="最多100字" class="layui-textarea" required-->
+<!--                                  lay-verify="required" maxlength="100" style="resize:none;" cols="30"-->
+<!--                                  rows="5"></textarea>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    &lt;!&ndash;                    <input type="text" id="replyTo" hidden="hidden">&ndash;&gt;-->
+<!--                    &lt;!&ndash;                    <input type="text" id="parentId" hidden="hidden">&ndash;&gt;-->
+<!--                    <input type="hidden" name="pub_comment_essayId" th:value="${essay.essay_id}">-->
+<!--                    <input type="hidden" name="pub_publisher_id" th:value="${#httpSession?.getAttribute('uid')}">-->
+<!--                    <input type="hidden" name="pub_publisher_name" th:value="${#httpSession?.getAttribute('name')}">-->
+
+<!--                    <div class="layui-form-item">-->
+<!--                        <button class="layui-btn" lay-submit lay-filter="comform">提交</button>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </div>-->
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lanyo.foodintroductionsystem.mapper.LikeMapper">
+
+    <insert id="addLike" parameterType="like">
+        insert into thumb (like_id , like_user_id , like_article_id)
+        values (#{like_id} , #{like_user_id} , #{like_article_id});
+    </insert>
+
+    <delete id="deleteLike" parameterType="int">
+        delete from thumb where like_id = #{like_id}
+    </delete>
+
+    <update id="updateLike" parameterType="like">
+        update thumb
+        set like_user_id = #{like_user_id} , like_article_id = #{like_article_id}
+        where like_id = #{like_id}
+    </update>
+
+    <select id="selectLike" parameterType="int" resultType="like">
+        select * from thumb where like_id  = #{like_id}
+    </select>
+
+    <select id="selectAllLike" parameterType="like">
+        select * from thumb
+    </select>
+
+    <select id="queryIfLike" parameterType="int" resultType="like">
+        select * from thumb where like_user_id = #{like_user_id} and
+                                  like_article_id = #{like_article_id}
+    </select>
+
+</mapper>

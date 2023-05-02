@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lanyo.foodintroductionsystem.mapper.PublishMapper">
+
+    <insert id="addPublish" parameterType="publish">
+        insert into publish (pub_author_id , pub_article_id)
+        values (#{pub_author_id} , #{pub_article_id});
+    </insert>
+
+    <delete id="deletePublish" parameterType="int">
+        delete from publish
+        where pub_id = #{pub_id}
+    </delete>
+
+    <update id="updatePublish" parameterType="publish">
+        update publish
+        set pub_author_id = #{pub_author_id} , pub_article_id = #{pub_article_id}
+        where pub_id = #{pub_id}
+    </update>
+
+    <select id="selectPublish" parameterType="int" resultType="publish">
+        select * from publish where pub_id = #{pub_id}
+    </select>
+
+    <select id="selectAllPublish" parameterType="publish">
+        select * from publish
+    </select>
+
+    <select id="queryAuthorIdByEssayId" parameterType="int" resultType="int">
+        select pub_author_id from publish where pub_article_id = #{pub_article_id}
+    </select>
+
+    <delete id="deletePubByEssayId" parameterType="int">
+        delete from publish where pub_article_id = #{pub_article_id}
+    </delete>
+
+</mapper>

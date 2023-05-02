@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>查看锁定文章</title>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/layui/2.5.7/css/layui.min.css">
+    <link th:href="@{/css/adminPages.css}" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/layui/2.5.7/layui.min.js"></script>
+
+    <style>
+        table {
+            border-collapse: collapse;
+            position: absolute;
+            top: 0;
+            left: 20%;
+            width: 70% !important;
+        }
+
+        table a:hover {
+            color: blue;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        #page {
+            margin-top: 20px;
+            text-align: center;
+            position: absolute;
+            bottom: 10px;
+            left: 600px;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="sidebar">
+
+        <div class="option_box">
+            <a class="option_box_text" th:href="@{/toadminpage}">
+                首页
+            </a>
+        </div>
+
+        <div class="option_box" style="background-color: #4CAF50;">
+            <a class="option_box_text" th:href="@{/toViewLockedEssay}">
+                已锁定文章
+            </a>
+        </div>
+
+        <div class="option_box">
+            <a class="option_box_text" th:href="@{/toViewCheckingEssay}">
+                待审核文章
+            </a>
+        </div>
+
+        <div class="option_box">
+            <a class="option_box_text" th:href="@{/toViewBannedUser}">
+                已禁言用户
+            </a>
+        </div>
+
+        <div class="option_box" style="bottom: -301px;position: relative;background-color: #ed1010;">
+            <a class="option_box_text" th:href="@{/index}">
+                回到主站
+            </a>
+        </div>
+
+    </div>
+
+    <table class="layui-table">
+        <thead>
+            <tr>
+                <th style="text-align: center">标题</th>
+                <th style="text-align: center">作者</th>
+                <th style="text-align: center">浏览量</th>
+                <th style="text-align: center">点赞量</th>
+                <th style="text-align: center">发布时间</th>
+                <th style="text-align: center">状态</th>
+                <th style="text-align: center">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="essay : ${LockedEssays}">
+                <td>
+                    <a th:href="@{/essays/}+${essay.essay_id}" th:text="${essay.essay_title}" style="text-decoration: underline;"></a>
+                </td>
+                <!-- 在查询作者名字是，如果想要确保essay不为空，且为空时不发生异常，可以尝试这么写↓ -->
+                <!--            <td th:text="${essay != null and essay.essay_id != null} ? ${@essaySer.queryAuthorNameByEssayId(essay.essay_id)} : ''"></td>-->
+                <td th:text="${@essaySer.queryAuthorNameByEssayId(essay.essay_id)}"></td>
+                <td th:text="${essay.essay_view_cnt}"></td>
+                <td th:text="${essay.essay_like_cnt}"></td>
+                <!--            <td th:text="${essay.essay_pub_time}"></td>-->
+                <td th:text="${#dates.format(essay.essay_pub_time,'yyyy-MM-dd HH:mm:ss')}"></td>
+                <td>
+                    <span th:if="${essay.essay_isChecking} == true">待审核</span>
+                    <span th:if="${essay.essay_isLocked == true &amp;&amp; essay.essay_isChecking == false}" th:text="已锁定"></span>
+                </td>
+                <td>
+                    <a th:href="@{/adminUnlockEssay1/}+${essay.essay_id}">解锁</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div id="page" class="layui-inline"></div>
+
+</body>
+
+<script>
+    layui.use(['laypage'], function(){
+        var laypage = layui.laypage;
+        laypage.render({
+            elem: 'page',
+            count: [[${#lists.size(LockedEssays)}]],
+            limit: 10,
+            jump: function(obj, first){
+                if(!first){
+                    location.href = "/query?words=[[${words}]]&page=" + obj.curr;
+                }
+            }
+        });
+    });
+</script>
+
+</html>

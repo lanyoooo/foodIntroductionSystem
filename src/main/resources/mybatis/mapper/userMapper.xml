@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lanyo.foodintroductionsystem.mapper.UserMapper">
+    
+    <insert id="addUser" parameterType="user">
+        insert into user(user_account,user_pwd,user_name)
+        values (#{user_account},#{user_pwd},#{user_name})
+    </insert>
+
+    <delete id="deleteUser" parameterType="int">
+        delete from user where user_id = #{user_id}
+    </delete>
+
+    <update id="updateUser" parameterType="user">
+        update user
+        set user_pwd = #{user_pwd} , user_name = #{user_name} , user_authority = #{user_authority}
+        where user_id = #{user_id}
+    </update>
+
+    <select id="selectUser" parameterType="int" resultType="user">
+        select * from user where user_id = #{user_id}
+    </select>
+
+    <select id="selectUserByAccount" parameterType="String" resultType="user">
+        select * from user where user_account = #{user_aacount}
+    </select>
+
+    <select id="selectAllUsers" resultType="user">
+        select * from user
+    </select>
+
+    <select id="queryUserByName" parameterType="String" resultType="user">
+        select * from user where user_name = #{user_name}
+    </select>
+
+    <update id="banUser" parameterType="int">
+        update user
+        set user_isBanned = 1
+        where user_id = #{user_id}
+    </update>
+
+    <update id="unBanUser" parameterType="int">
+        update user
+        set user_isBanned = 0
+        where user_id = #{user_id}
+    </update>
+
+    <select id="countBannedUser" resultType="int">
+        select count(*) from user where user_isBanned = 1
+    </select>
+
+    <select id="countUsersNumber" resultType="int">
+        select count(*) from user
+    </select>
+
+    <select id="queryBannedUser" resultType="user">
+        select * from user where user_isBanned = 1
+    </select>
+
+</mapper>

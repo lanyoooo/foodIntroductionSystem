@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>修改攻略</title>
+    <link th:href="@{/css/common.css}" rel="stylesheet">
+    <link th:href="@{/css/essays/publish.css}" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+        <h1>修改攻略</h1>
+        <form th:action="@{/applyUpdate}"> <!-- 要改为提交到update接口，如果是publish的接口，调用的是insert方法 -->
+            <label for="title">标题:</label>
+            <input id="title" name="title" style="width: 95%; height: 10px !important;" required="" th:value="${essay.essay_title}" th:placeholder="${essay.essay_title}">
+            <label for="content">正文:</label>
+            <textarea id="content" name="content" style="width: 95% !important;" required="" th:text="${essay.essay_text}"></textarea>
+            <input type="hidden" name="id" th:value="${essay.essay_id}">
+
+            <button type="submit" style="position: relative !important; left: 58px;">提交修改</button>
+        </form>
+    </div>
+
+</body>
+</html>

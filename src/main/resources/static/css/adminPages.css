@@ -1,0 +1,30 @@
+.sidebar {
+    background-color: #333;
+    width: 150px;
+    height: 100%;
+    display: flex;
+    position: fixed;
+    flex-direction: column;
+    align-items: center;
+    left: 0;
+    top: 0;
+    z-index: 1;
+}
+
+.option_box {
+    /*background-color: #4CAF50;*/
+    width: 95%;
+    height: 45px;
+    text-align: center;
+    margin: 10px;
+    border-radius: 5px;
+    font-weight: 700;
+    font-size: 19px;
+}
+
+.option_box_text {
+    position: relative;
+    top: 20%;
+    color: white;
+    text-decoration-line: none;
+}

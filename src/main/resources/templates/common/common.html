@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <div class="navbar" th:fragment="navbar" style="left: 0 !important;top: 0 !important;">
+        <a class="active" href="" th:href="@{/index}">首页</a><!-- 会丢失已经登陆的页面的信息 -->
+        <a th:href="@{/toMyPublish}">我发布的</a>
+        <div class="search-container">
+            <form th:action="@{/query}">
+                <input type="text" name="words" required placeholder="搜索...">
+                <button type="submit">搜索</button>
+            </form>
+        </div>
+
+        <div class="user-container">
+            <span class="username">欢迎您，</span>
+            <!-- 在thymeleaf中使用java类对象的方法，需要#声明类，在类后价格问号 -->
+            <span class="username" th:text="${#httpSession?.getAttribute('name')}"></span>
+        </div>
+
+        <a th:href="@{/toUpdateUser}">修改资料</a>
+        <a class="logout" th:href="@{/logout}">登出</a>
+    </div>
+
+    <button id="publish-btn" class="publish-btn" th:fragment="publish-btn" onclick="window.location.href='/toPublish'">发布</button>
+
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>美食攻略系统</title>
+    <link th:href="@{/css/common.css}" rel="stylesheet">
+    <link href="/static/css/index.css"  th:href="@{/css/index.css}" rel="stylesheet">
+</head>
+
+<body>
+
+    <div th:insert="~{common/common::navbar}"></div>
+
+    <div th:insert="~{common/common::publish-btn}"></div>
+
+    <div class="recommend">
+        <div class="recommend_box" style="position: relative;">
+            <h2>推荐攻略</h2>
+            <table>
+                <tbody>
+                    <tr th:each="reEssay : ${recommendEssays}">
+                        <td>
+                            <div>
+                                <span>&nbsp&nbsp&nbsp&nbsp#</span>
+                                <a th:href="@{/essays/} + ${reEssay.essay_id}"
+                                   th:text="${reEssay.essay_title}">
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="recommend_box" style="width: 50px">
+
+        </div>
+
+        <div class="recommend_box" style="position: relative;">
+            <h2>随便看看</h2>
+            <table>
+                <tbody>
+                    <tr th:each="ranEssay : ${randomEssays}">
+                        <td>
+                            <div>
+                                <span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp#</span>
+                                <a th:href="@{/essays/} + ${ranEssay.essay_id}"
+                                   th:text="${ranEssay.essay_title}">
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

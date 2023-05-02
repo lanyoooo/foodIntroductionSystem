@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片轮播</title>
+    <style>
+        .slideshow {
+            position: relative;
+            height: 450px;
+            width: 750px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .slideshow img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .slideshow img.active {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+<div class="slideshow">
+    <img class="active" src="/static/img/iTab-%20(1).jpg">
+    <img src="/static/img/iTab-%20(2).jpg">
+    <img src="/static/img/iTab-%20(3).jpg">
+    <img src="/static/img/iTab-%20(4).jpg">
+    <img src="/static/img/iTab-%20(5).jpg">
+</div>
+
+</body>
+<script>
+    const slideshow = document.querySelector('.slideshow');
+    const slides = slideshow.querySelectorAll('img');
+
+    let currentSlide = 0;
+    let slideInterval = setInterval(nextSlide, 6000);
+
+    function nextSlide() {
+        slides[currentSlide].className = ' ';
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].className = 'active';
+    }
+</script>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>已发布</title>
+    <!-- 引入LayUI的分页插件 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/layui/2.5.7/css/layui.min.css">
+    <link th:href="@{/css/common.css}" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/layui/2.5.7/layui.min.js"></script>
+
+    <style>
+        table {
+            border-collapse: collapse;
+            position: absolute;
+            top: 75px;
+            left: 225px;
+            width: 70% !important;
+        }
+
+        table a:hover {
+            color: blue;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        #page {
+            margin-top: 20px;
+            text-align: center;
+            position: absolute;
+            bottom: 10px;
+            left: 600px;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="navbar">
+        <a href="/index" th:href="@{/index}">首页</a><!-- 会丢失已经登陆的页面的信息 -->
+        <a class="active" th:href="@{/toMyPublish}">我发布的</a>
+        <div class="search-container">
+            <form th:action="@{/query}">
+                <input type="text" name="words" required placeholder="搜索...">
+                <button type="submit">搜索</button>
+            </form>
+        </div>
+
+        <div class="user-container">
+            <span class="username">欢迎您，</span>
+            <span class="username" th:text="${#httpSession?.getAttribute('name')}"></span>
+        </div>
+
+        <a th:href="@{/toUpdateUser}">修改资料</a>
+        <a class="logout" th:href="@{/logout}">注销</a>
+    </div>
+
+    <div th:insert="~{common/common::publish-btn}"></div>
+
+    <table class="layui-table"> <!-- 后续可以修改此处样式，将查询结果只局限于居中部分，并且也不用将每种信息都单独作一列，可以拼接起来作为一列 -->
+        <thead>
+        <tr>
+            <th style="text-align: center !important;">标题</th>
+            <th style="text-align: center !important;">浏览量</th>
+            <th style="text-align: center !important;">点赞量</th>
+            <th style="text-align: center !important;">发布时间</th>
+            <th style="text-align: center !important;">操作</th>
+            <th style="text-align: center !important;">状态</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="essay : ${myEssays}">
+            <td>
+                <a th:href="@{/essays/}+${essay.essay_id}" th:text="${essay.essay_title}" style="text-decoration: underline;"></a>
+            </td>
+            <td th:text="${essay.essay_view_cnt}"></td>
+            <td th:text="${essay.essay_like_cnt}"></td>
+            <!--            <td th:text="${essay.essay_pub_time}"></td>-->
+            <td th:text="${#dates.format(essay.essay_pub_time,'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td>
+                <a style="color: blue;" th:href="@{/essays/update/}+${essay.essay_id}">编辑</a>
+                |
+                <a style="color: blue;" th:href="@{/essays/delete/}+${essay.essay_id}">删除</a>
+                <div th:if="${essay.essay_isLocked} == true">
+                    <a th:if="${essay.essay_isChecking} == false" style="color: blue;" th:href="@{/applyUnlock/}+${essay.essay_id}">申请解锁</a>
+                    <span th:if="${essay.essay_isChecking} == true" >已申请解锁</span>
+                </div>
+            </td>
+            <td>
+                <span th:if="${essay.essay_isChecking} == true">审核中</span>
+                <span th:if="${essay.essay_isLocked == true &amp;&amp; essay.essay_isChecking == false}" th:text="已锁定"></span>
+                <span th:if="${essay.essay_isLocked} == false" th:text="正常"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <!--上述代码使用了Thymeleaf的语法，通过th:each来遍历${queryResults}中的每一项，并将其赋值给变量essay。
+        然后，使用th:text来将essay对象中的各个属性值显示在表格中的对应位置。-->
+
+    <div id="page" class="layui-inline"></div>
+
+</body>
+
+<script>
+    layui.use(['laypage'], function(){
+        var laypage = layui.laypage;
+        laypage.render({
+            elem: 'page',
+            count: [[${#lists.size(myEssays)}]],
+            limit: 10,
+            jump: function(obj, first){
+                if(!first){
+                    location.href = "/query?words=[[${words}]]&page=" + obj.curr;
+                }
+            }
+        });
+    });
+</script>
+
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>查看禁言用户</title>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/layui/2.5.7/css/layui.min.css">
+    <link th:href="@{/css/adminPages.css}" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/layui/2.5.7/layui.min.js"></script>
+
+    <style>
+        table {
+            border-collapse: collapse;
+            position: absolute;
+            top: 0;
+            left: 20%;
+            width: 70% !important;
+        }
+
+        table a:hover {
+            color: blue;
+        }
+
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        #page {
+            margin-top: 20px;
+            text-align: center;
+            position: absolute;
+            bottom: 10px;
+            left: 600px;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="sidebar">
+
+        <div class="option_box">
+            <a class="option_box_text" th:href="@{/toadminpage}">
+                首页
+            </a>
+        </div>
+
+        <div class="option_box">
+            <a class="option_box_text" th:href="@{/toViewLockedEssay}">
+                已锁定文章
+            </a>
+        </div>
+
+        <div class="option_box">
+            <a class="option_box_text" th:href="@{/toViewCheckingEssay}">
+                待审核文章
+            </a>
+        </div>
+
+        <div class="option_box" style="background-color: #4CAF50;">
+            <a class="option_box_text" th:href="@{/toViewBannedUser}">
+                已禁言用户
+            </a>
+        </div>
+
+        <div class="option_box" style="bottom: -301px;position: relative;background-color: #ed1010;">
+            <a class="option_box_text" th:href="@{/index}">
+                回到主站
+            </a>
+        </div>
+
+    </div>
+
+    <table class="layui-table">
+        <thead>
+            <tr>
+                <th style="text-align: center">用户名</th>
+                <th style="text-align: center">id</th>
+                <th style="text-align: center">权限</th>
+                <th style="text-align: center">状态</th>
+                <th style="text-align: center">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="user : ${bannedUsers}">
+                <td th:text="${user.user_name}"></td>
+                <td th:text="${user.user_id}"></td>
+                <td>
+                    <div>
+                        <span th:if="${user.user_authority} == 'root'" th:text="'系统管理员'"></span>
+                        <span th:if="${user.user_authority} != 'root'" th:text="'普通用户'"></span>
+                    </div>
+                </td>
+                <td>禁言中</td>
+                <td>
+                    <a th:href="@{/adminUnbanUser/}+${user.user_id}">解除禁言</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+
+<script>
+    layui.use(['laypage'], function(){
+        var laypage = layui.laypage;
+        laypage.render({
+            elem: 'page',
+            count: [[${#lists.size(bannedUsers)}]],
+            limit: 10,
+            jump: function(obj, first){
+                if(!first){
+                    location.href = "/query?words=[[${words}]]&page=" + obj.curr;
+                }
+            }
+        });
+    });
+</script>
+
+</html>

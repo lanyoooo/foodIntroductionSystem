@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lanyo.foodintroductionsystem.mapper.EssayMapper">
+
+    <insert id="insertEssay" parameterType="essay">
+        insert into essay(essay_title,essay_text,essay_likes_cnt,essay_views_cnt,essay_pub_time)
+        values (#{essay_title},#{essay_text},#{essay_like_cnt},#{essay_view_cnt},#{essay_pub_time})
+    </insert>
+
+    <delete id="deleteEssay" parameterType="int">
+        delete from essay where essay_id = #{essay_id}
+    </delete>
+
+    <!-- update title text -->
+    <update id="updateEssay" parameterType="essay">
+        update essay
+        set essay_title = #{essay_title},essay_text = #{essay_text}
+        where essay_id = #{essay_id}
+    </update>
+
+    <!-- like_cnt plus 1 -->
+    <update id="updateEssayLikePlus" parameterType="int">
+        update essay
+        set essay_likes_cnt = essay_likes_cnt + 1
+        where essay_id = #{essay_id}
+    </update>
+
+    <!-- like_cnt minus 1 -->
+    <update id="updateEssayLikeCancel" parameterType="int">
+        update essay
+        set essay_likes_cnt = essay_likes_cnt - 1
+        where essay_id = #{essay_id}
+    </update>
+
+    <update id="updateEssayView" parameterType="int">
+        update essay
+        set essay_views_cnt = essay_views_cnt + 1
+        where essay_id = #{essay_id}
+    </update>
+
+    <select id="selectEssay" parameterType="int" resultType="essay">
+        select * from essay where essay_id = #{essay_id}
+    </select>
+
+    <select id="selectAllEssay" resultType="essay">
+        select  * from essay
+    </select>
+
+    <select id="queryLikelyEssay" parameterType="String" resultType="essay">
+        select * from essay where essay_title like CONCAT('%', #{words}, '%')
+    </select>
+    
+    <select id="queryLatestPublishId" resultType="int">
+        select MAX(essay_id) from essay
+    </select>
+
+    <!-- 联表查询，根据essay、publish、user三个表，给出essay_id，查出对应的authorName。 -->
+    <select id="queryAuthorNameByEssayId" parameterType="int" resultType="String">
+        select u.user_name from essay e
+        join publish p on e.essay_id = p.pub_article_id
+        join user u on p.pub_author_id = u.user_id
+        where e.essay_id = #{essay_id}
+    </select>
+
+    <select id="queryEssayByAuthor" parameterType="int" resultType="essay">
+        select * from essay e
+        join publish p on p.pub_article_id = e.essay_id
+        where p.pub_author_id = #{pub_author_id}
+    </select>
+
+    <select id="queryAllRecommendEssay" resultType="essay">
+        select * from essay where essay_isRecommend = 1
+    </select>
+
+    <update id="lockEssay" parameterType="int">
+        update essay
+        set essay_isLocked = 1
+        where essay_id = #{essay_id}
+    </update>
+
+    <update id="unlockEssay" parameterType="int">
+        update essay
+        set essay_isLocked = 0
+        where essay_id = #{essay_id}
+    </update>
+
+    <update id="setEssayChecking" parameterType="int">
+        update essay
+        set essay_isChecking = 1
+        where essay_id = #{essay_id}
+    </update>
+
+    <update id="unSetEssayChecking" parameterType="int">
+        update essay
+        set essay_isChecking = 0
+        where essay_id = #{essay_id}
+    </update>
+
+    <select id="countLockedEssay" resultType="int">
+        select count(*) from essay where essay_isLocked = 1
+    </select>
+
+    <select id="countCheckingEssay" resultType="int">
+        select count(*) from essay where essay_isChecking = 1
+    </select>
+
+    <select id="countEssaysNumber" resultType="int">
+        select count(*) from essay
+    </select>
+
+    <select id="queryLockedEssays" resultType="essay">
+        select * from essay where essay_isLocked = 1
+    </select>
+
+    <select id="queryCheckingEssays" resultType="essay">
+        select * from essay where essay_isChecking = 1
+    </select>
+
+</mapper>
